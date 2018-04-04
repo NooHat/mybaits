@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 命名空间，作用是对sql进行分类划管理，sql隔离 -->
+
+<!-- 如果用${} 容易引起sql注入  而且占位符名称只能用value  表示不加任何修饰 eg:%name%  -->
+<mapper namespace="com.dao.Oz_userMapper">
+	<!-- 查询 -->
+	<select id="selectUser" parameterType="OZ_USER_QueryVo" resultType="OZ_USER_Model">
+	    SELECT * FROM OZ_USER a
+	    <where>
+	    	<include refid="ByUsername"></include>
+	    </where>
+	</select>
+	
+	
+	<!--selectUser sql片段 -->
+	<sql id="ByUsername">
+
+		<if test="oz_user_model.username  != '' and oz_user_model.username  !=null">
+	    	 and a.username like #{oz_user_model.username}
+	    </if>
+
+	</sql>
+	
+	
+	
+	
+	<!-- 插入用户 输入的参数是pojo类 #{}中要填写pojo的属性值 -->
+	<insert id="insertUser" parameterType="com.model.OZ_USER_Model">
+		insert into OZ_USER(id,username,pwd) value (#{id},#{username},#{pwd})
+	</insert>
+	<delete id="deleteUser" parameterType="com.model.OZ_USER_Model">
+		delete from OZ_USER where id=#{id}
+	</delete>
+	<update id="updateUser" parameterType="com.model.OZ_USER_Model">
+		update OZ_USER set username=#{username},pwd=#{pwd} where id=#{id}
+	</update>
+</mapper>
+
