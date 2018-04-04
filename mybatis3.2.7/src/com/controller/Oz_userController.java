@@ -2,6 +2,7 @@ package com.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import com.model.OZ_USER_QueryVo;
 
 public class Oz_userController {
 	private SqlSessionFactory ssf;
+	
 	@Before
 	public void setup() throws IOException{
 		//创建配置文件
@@ -35,6 +37,10 @@ public class Oz_userController {
 		model.setUsername("admin");
 		OZ_USER_QueryVo oz_user_queryvo=new OZ_USER_QueryVo();
 		oz_user_queryvo.setOz_user_model(model);
+		List<String> ids=new ArrayList<String>();
+		ids.add("1");
+		ids.add("2");
+		oz_user_queryvo.setIds(ids);
 		Oz_userMapper oz_userMapper=ss.getMapper(Oz_userMapper.class);
 		List<OZ_USER_Model> usermodel_list=oz_userMapper.selectUser(oz_user_queryvo);
 		System.out.println(usermodel_list);

@@ -6,24 +6,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <!-- 如果用${} 容易引起sql注入  而且占位符名称只能用value  表示不加任何修饰 eg:%name%  -->
 <mapper namespace="com.dao.Oz_userMapper">
+	<!-- OZ_USER start -->
 	<!-- 查询 -->
 	<select id="selectUser" parameterType="OZ_USER_QueryVo" resultType="OZ_USER_Model">
 	    SELECT * FROM OZ_USER a
-	    <where>
+	    <where><!-- where可以自动去掉查询条件中的第一个and -->
 	    	<include refid="ByUsername"></include>
+	    	<include refid="InIds"></include>
 	    </where>
 	</select>
 	
 	
 	<!--selectUser sql片段 -->
-	<sql id="ByUsername">
+	<sql id="ByUsername"><!-- 根据username查询 -->
 
 		<if test="oz_user_model.username  != '' and oz_user_model.username  !=null">
 	    	 and a.username like #{oz_user_model.username}
 	    </if>
 
 	</sql>
-	
+	<sql id="InIds"><!-- 根据多个id查询 -->
+		<if test="ids!='' and ids!=null">
+			<!-- 假设查询条件是  and(id=1 or id=2)  -->
+			<!-- 使用foreach -->
+			<foreach collection="ids" item="id" open="and(" close=")" separator="or">
+				<!-- collection:指输入对象中集合属性名 （ids）
+					 item:每次遍历的对象名
+					 open:开始遍历时要拼接的字符串（and(）
+					 close:结束遍历时拼接的字符串（)》
+					 separator:两次遍历中间拼接的字符串 （or）
+				 -->
+				 a.id=#{id}
+			</foreach>
+		</if>
+	</sql>
+	<!-- OZ_USER end -->
 	
 	
 	
